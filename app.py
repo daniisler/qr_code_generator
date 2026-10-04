@@ -5,11 +5,12 @@ import re
 
 import cairosvg
 import qrcode
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, send_from_directory
 from PIL import Image, UnidentifiedImageError
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 2 * 1024 * 1024
+SITE_URL = "https://qr.daniisler.ch"
 
 ERROR_CORRECTION_LEVELS = {
     "L": (qrcode.constants.ERROR_CORRECT_L, "Low (7%)"),
@@ -144,7 +145,18 @@ def index():
         logo_template=logo_template,
         logo_templates=LOGO_TEMPLATES,
         preview_data=preview_data,
+        site_url=SITE_URL,
     )
+
+
+@app.route("/robots.txt")
+def robots():
+    return send_from_directory(app.root_path, "robots.txt", mimetype="text/plain")
+
+
+@app.route("/sitemap.xml")
+def sitemap():
+    return send_from_directory(app.root_path, "sitemap.xml", mimetype="application/xml")
 
 
 if __name__ == "__main__":
