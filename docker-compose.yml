@@ -1,0 +1,6 @@
+services:
+  qr-code-generator:
+    build: .
+    ports:
+      - "8500:8500"
+    restart: unless-stopped
